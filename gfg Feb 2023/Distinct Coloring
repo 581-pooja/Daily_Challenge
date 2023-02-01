@@ -1,0 +1,50 @@
+class Solution{   
+public:
+    long long int distinctColoring(int N, int r[], int g[], int b[]){
+        vector<vector<long long int>> dp(N, vector<long long int> (4, -1));
+        // base condition
+        dp[0][1] = min(g[0], b[0]); // consider last color = red = 1 so min of blue & greeen
+        dp[0][2] = min(r[0], b[0]);
+        dp[0][3] = min(r[0], g[0]);
+        
+        // explore all paths and take min of it
+        for(int i = 1; i < N; i++){
+            dp[i][1] = min(g[i] + dp[i-1][2], b[i] + dp[i-1][3]);
+            dp[i][2] = min(r[i] + dp[i-1][1], b[i] + dp[i-1][3]);
+            dp[i][3] = min(r[i] + dp[i-1][1], g[i] + dp[i-1][2]);
+        }
+        return min({dp[N-1][1], dp[N-1][2], dp[N-1][3]});
+    }
+};
+
+// TC: O(N) | SC: O(N *4)
+
+/*
+
+There is a row of N houses, each house can be painted with one of the three colors: red, blue or green. The cost of painting each house with a certain color is different.
+You have to paint all the houses such that no two adjacent houses have the same color. Find the minimum cost to paint all houses.
+
+The cost of painting each house in red, blue or green colour is given in the array r[], g[] and b[] respectively.
+N = 3
+r[] = {1, 1, 1}
+g[] = {2, 2, 2}
+b[] = {3, 3, 3}
+Output: 4
+Explanation: We can color the houses in RGR manner to incur minimum cost.
+We could have obtained a cost of 3 if we coloured all houses red, but we 
+cannot color adjacent houses with the same color.
+
+Intuition
+
+In this problem there are choices, and we have to optimally choose between the options. We will use Dynamic Programming in order to solve the problem.
+Implementation
+
+First, we will create a 2D DP table of n*3 size, where DP[i][j] represents the ith house with jth color. We will consider the minimum among the three choices. 
+The DP table will store the minimum values for the sub-problems.
+Refer to the full solution for a better understanding.
+Complexity
+
+Time Complexity: The time complexity will be O(n).
+Space Complexity: As we are creating the DP table, the space complexity will be O(n).
+
+*/
