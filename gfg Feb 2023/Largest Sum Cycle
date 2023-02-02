@@ -1,0 +1,77 @@
+class Solution
+{
+  public:
+  long long largestCycle = -1;
+  void dfsCheck(int node, vector<int> &edge, bool visited[], bool pathVis[]){
+      visited[node] = 1;
+      pathVis[node] = 1;
+      if(edge[node] != -1){
+          int adjNode = edge[node];
+          if(!visited[adjNode]){
+              dfsCheck(adjNode, edge, visited, pathVis);
+          }
+            // if cycle is present then both visited & pathVisited are true
+          else if(pathVis[adjNode] == 1){
+              // adding all the nodes in the cycle
+            int cur = adjNode;
+            long long sum = 0;
+            do{
+                sum += cur;
+                cur = edge[cur];
+            }while(cur != adjNode);
+            largestCycle = max(largestCycle, sum);
+          }
+      }
+    pathVis[node] = false;
+  }
+  
+  long long largestSumCycle(int n, vector<int> edge)
+  {
+    bool visited[n] = {0};
+    bool pathVis[n] = {0};
+    for(int i = 0; i < n; i++){
+        if(!visited[i]){
+            dfsCheck(i, edge, visited, pathVis);
+        }
+    }
+    return largestCycle;
+  }
+  
+  // TC: O(N+E) (DFS Tc)
+  // SC: O(N) + O(N) (Visited + Path Visited)
+};
+
+/*
+Question:
+Given a maze with N cells. Each cell may have multiple entry points but not more than one exit(i.e entry/exit points are unidirectional doors like valves).
+You are given an array Edge[] of N integers, where Edge[i] contains the cell number that can be reached from of cell i in one step. 
+Edge[i] is -1 if the ith cell doesn't have an exit. 
+The task is to find the largest sum of a cycle in the maze(Sum of a cycle is the sum of the cell indexes of all cells present in that cycle).
+Note:The cells are named with an integer value from 0 to N-1. If there is no cycle in the graph then return -1.
+
+Example 1:
+
+Input:
+N = 4
+Edge[] = {1, 2, 0, -1} Output: 3
+Explanation: 
+There is only one cycle in the graph.
+(i.e 0->1->2->0)
+Sum of the cell index in that cycle = 0 + 1 + 2 = 3.
+
+Intution:
+The array edge given represent Directed Cyclic Cycle so using DFS to check cycle present in the directed graph
+In order to solve this problem, we will use Depth First Search.
+
+Implementation
+
+First we will construct the graph, with the given nodes and edges. Now for every node, if the node is not visited we will try to find if the node is a part of a cycle or not. 
+If node is visited & as well as pathVisited means it is part of the cycle then,
+we will mark all the nodes as pathVisited and calculate the sum of the path. Thus we can find out largest sum cycle.
+
+Complexity
+Time Complexity: The time complexity will be O(n).
+Space Complexity: The space complexity will be O(n).
+
+
+*/
