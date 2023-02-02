@@ -37,6 +37,12 @@ public:
     }
 };
 
+// Tc: O(M) | SC: O(1)
+Let N be the length of order, and M be the total number of characters in words
+Time complexity is O(M+N) However, we know that N is fixed as 26 (For insertion in map). Therefore, the time complexity is O(M) 
+Space complexity : O(1) The only extra data structure we use is the hashmap/array that serves to store the letter-order relations for each word in order. 
+Because the length of order is fixed as 26, this approach achieves constant space complexity.
+
 /*
 Question:
 In an alien language, surprisingly, they also use English lowercase letters, but possibly in a different order. 
