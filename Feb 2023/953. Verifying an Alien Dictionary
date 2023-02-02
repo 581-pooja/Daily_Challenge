@@ -1,0 +1,67 @@
+class Solution {
+public:
+    bool check(unordered_map<char,int> &mp, string word1, string word2){
+        int n = word1.size();
+        int m = word2.size();
+        int i = 0, j = 0;
+
+        while(i < n && j < m){
+            // If word1 has a greater character, return false
+            if(mp[word1[i]] > mp[word2[i]]) return false;       // world > word (l > d)
+            
+            // If word2 has a greater character, return true
+            else if(mp[word1[i]] < mp[word2[i]]) return true;   // hello leetcode (h < l) 
+
+            i++; j++;                // if same character then move ptr ahead -> world word (w == w)
+        }
+        // If word1 has run out of characters, return true (word1 is less than or equal to word2)
+        // If word2 has run out of characters, return false (word1 is greater than word2)
+        return (word1.size() <= word2.size());                // apple > app (l > null char)
+    }
+
+    bool isAlienSorted(vector<string>& words, string order) {
+        int pos = 0;
+        unordered_map<char,int> mp;
+        // creating a mapping of characters to their positions in the given order
+        for(char i : order){
+            mp[i] = pos;
+            pos++;
+        }
+
+        // Iterate over the list of words and compare each consecutive pair using check function
+        for(int i = 0; i < words.size()-1; i++){
+            if(check(mp, words[i], words[i+1]) == false) return false;
+        }
+        // If all pairs are in correct order, then return true 
+        return true;
+    }
+};
+
+/*
+Question:
+In an alien language, surprisingly, they also use English lowercase letters, but possibly in a different order. 
+The order of the alphabet is some permutation of lowercase letters.
+
+Given a sequence of words written in the alien language, and the order of the alphabet, 
+return true if and only if the given words are sorted lexicographically in this alien language.
+
+Example 1:
+Input: words = ["hello","leetcode"], order = "hlabcdefgijkmnopqrstuvwxyz"
+Output: true
+Explanation: As 'h' comes before 'l' in this language, then the sequence is sorted.
+
+Example 2:
+Input: words = ["word","world","row"], order = "worldabcefghijkmnpqstuvxyz"
+Output: false
+Explanation: As 'd' comes after 'l' in this language, then words[0] > words[1], hence the sequence is unsorted.
+
+Example 3:
+Input: words = ["apple","app"], order = "abcdefghijklmnopqrstuvwxyz"
+Output: false
+Explanation: The first three characters "app" match, and the second string is shorter (in size.) 
+According to lexicographical rules "apple" > "app", because 'l' > '∅', where '∅' is defined as the blank character which is less than any other character 
+
+Intution:
+- Storing the order in hashmap so we can get the order of alphabet  or creating a map of characters to their positions in the given order
+- Iterate over the list of words and compare each consecutive pair using check function
+*/
