@@ -1,0 +1,86 @@
+/* 520. Detect Capital
+
+We define the usage of capitals in a word to be right when one of the following cases holds:
+
+    All letters in this word are capitals, like "USA".
+    All letters in this word are not capitals, like "leetcode".
+    Only the first letter in this word is capital, like "Google".
+
+Given a string word, return true if the usage of capitals in it is right.
+
+Example 1:
+Input: word = "USA"
+Output: true
+
+Example 2:
+Input: word = "FlaG"
+Output: false
+*/
+
+// Method 1:
+class Solution {
+public:
+    bool detectCapitalUse(string word) {
+        int capCnt = 0;
+        int n = word.size();
+        if(n == 1 ) return true; // eg. 'a' or 'A'
+        for(auto it : word){
+            if(it >= 'A' && it <= 'Z') capCnt++;
+        }
+
+        // "USA"
+        if(capCnt == n) return true;
+
+        // "Google"
+        else if(capCnt == 1 &&(word[0] >= 'A' && word[0] <= 'Z')) return true;
+
+        // "leetcode"
+        else if(capCnt == 0) return true;
+        return false;
+    }
+};
+
+// Method 2:
+class Solution {
+public:
+    bool detectCapitalUse(string word) {
+        int capCnt = 0;
+        int n = word.size();
+        if(n == 1 ) return true; // eg. 'a' or 'A'
+
+        // ascii value of A-65 and a-97
+        for(auto it: word){
+            if(it >= 65 && it <= 90) capCnt++;
+        }
+
+        // "USA"
+        if(capCnt == n) return true;
+
+        // "Google"
+        else if(capCnt == 1 &&(word[0] >= 65 && word[0] <= 90)) return true;
+
+        // "leetcode"
+        else if(capCnt == 0) return true;
+        return false;
+    }
+};
+
+// Method 3: Builtin function isupper is used
+class Solution {
+public:
+    bool detectCapitalUse(string word) {
+        // count the capital letters present in words
+        int count = 0;
+        for(int i = 0; i < word.size(); i++){
+            if(isupper(word[i])){
+                count++;
+            }
+        }
+        if((count == word.size()) || (count == 0) || (count == 1 && isupper(word[0]))){
+            return true;
+        }
+        return false;
+    }
+};
+
+// Tc: O(N) | SC: O(1)
