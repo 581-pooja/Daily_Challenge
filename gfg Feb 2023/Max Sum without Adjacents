@@ -1,0 +1,89 @@
+// Memoization
+    int f(int ind, int arr[], vector<int> &dp){
+        // base case : if index == 0 then pick it means index 1 is been skipped
+        if(ind == 0) return arr[ind];
+        // to avoid negative values
+        if(ind < 0) return 0;
+        // check overlapping sub problem
+        if(dp[ind] != -1) return dp[ind];
+        // explore all the paths
+        // pick the element
+        int pick = arr[ind] + f(ind - 2, arr, dp);
+        // not Pick the element
+        int notPick = 0 + f(ind - 1, arr, dp);
+        // return the best
+        return dp[ind] = max(pick, notPick);
+    }
+    
+	// calculate the maximum sum with out adjacent
+	int findMaxSum(int *arr, int n) {
+	    vector<int> dp(n+1, -1);
+	    return f(n-1, arr, dp);
+	}
+// Tc: O(N) (n-> 0) | SC: O(N) (auxillary stack space)
+
+class Solution{
+public:	
+    // Tabulation
+	// calculate the maximum sum with out adjacent
+	int findMaxSum(int *arr, int n) {
+	    vector<int> dp(n+1, -1);
+	    // base case
+	    dp[0] = arr[0];
+	    // express interms of for loop
+	    for(int i = 1; i < n; i++){
+	        int take = arr[i];
+	        if(i > 1) take += dp[i-2];
+	        int notTake = dp[i-1];
+	        dp[i] = max(take, notTake);
+	        
+	    }
+	    return dp[n-1];
+	}
+};
+// TC: O(N) for loop | Sc: O(N) (Dp array)
+
+// Tabulation
+// base case
+// express interms of nested loop
+// copy the recursion
+
+class Solution{
+public:	
+    // Space optimization
+	// calculate the maximum sum with out adjacent
+	int findMaxSum(int *arr, int n) {
+	    // base case
+	    int prev2 = 0;
+	    int prev = arr[0];
+	    int cur;
+	    // express interms of for loop
+	    for(int i = 1; i < n; i++){
+	        int take = arr[i];
+	        if(i > 1) take += prev2;
+	        int notTake = prev;
+	        cur = max(take, notTake);
+	        prev2 = prev;
+	        prev = cur;
+	    }
+	    return prev;
+	}
+};
+// Tc: O(N) | SC: O(1)
+
+/*
+Question:
+Given an array Arr of size N containing positive integers. 
+Find the maximum sum of a subsequence such that no two numbers in the sequence should be adjacent in the array.
+
+Example 1:
+Input: N = 6
+Arr[] = {5, 5, 10, 100, 10, 5}
+Output: 110
+Explanation: If you take indices 0, 3
+and 5, then Arr[0]+Arr[3]+Arr[5] =
+5+100+5 = 110.
+
+Intition:
+Pick the index which gives max value and not pick the adj 
+*/
