@@ -1,0 +1,54 @@
+/* Question:
+Given a binary matrix of dimensions  with R rows and C columns. Start from cell(0, 0), moving in the right direction. Perform the following operations: 
+    If the value of matrix[i][j] is 0, then traverse in the same direction and check the next value.
+    If the value of matrix[i][j] is 1, then update matrix[i][j] to 0 and change the current direction clockwise. 
+    ie - up, right, down, or left directions change to right, down, left, and up respectively.
+
+Find the index of the cell where you will be forced to exit the matrix while performing the given traversal. 
+
+Example 1:
+Input:
+matrix[][] = {{0,1},
+              {1,0}}
+R=2 C=2
+Output: (1,1)
+
+Intuition
+
+In order to solve the problem we will move through the grid until we reach outside the grid by following those instructions.
+Implementation
+
+We will run a while loop until we are inside the grid, and follow the given directions to navigate over the grid. 
+We will keep updating our answer indices with the current indices. As soon as we leave the grid, we just return our answer indices.
+Complexity
+
+Time Complexity: The time complexity will be O(n).
+Space Complexity: The space complexity will be O(1).
+*/
+
+class Solution{
+    public:
+    pair<int,int> endPoints(vector<vector<int>> matrix, int R, int C){
+        
+        // right, down, left, up ->array
+        vector<pair<int, int>> dir = { {0, 1}, {1, 0},  {0, -1}, {-1, 0}};
+        int n = matrix.size(), m = matrix[0].size();
+        int i=0, j=0, k=0;      // k is direction
+        pair<int, int> ans;
+        
+        while(i>=0 && j>=0 && i< n && j<m){
+            ans = {i, j};
+            if(matrix[i][j]==1){
+                matrix[i][j]=0;
+                // using modulus so our index will never go out of bound
+                k = (k+1)%4; 
+            }
+            i = i+dir[k].first;
+            j = j+dir[k].second;
+        }
+        return ans;
+    }
+};
+// TC: O(R * C) | SC: O(1)
+
+// up -> right | down -> left | left -> up | right -> down | directions to move
