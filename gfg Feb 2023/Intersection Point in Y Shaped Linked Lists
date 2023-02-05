@@ -1,0 +1,42 @@
+/* Question: (Intersection in Linked List)
+Given two singly linked lists of size N and M, write a program to get the point where two linked lists intersect each other.
+Input: 
+Linked List 1 = 4->1->common
+Linked List 2 = 5->6->1->common
+common = 8->4->5->NULL
+Output: 8
+Explanation: 
+
+4              5
+|              |
+1              6
+ \             /
+  8   -----  1 
+   |
+   4
+   |
+  5
+  |
+  NULL    
+*/
+
+class Solution
+{
+public:
+    int intersectPoint(Node* head1, Node* head2)
+    {
+        if(head1 == NULL || head2 == NULL){
+            return NULL;
+        }
+        Node* d1 = head1;
+        Node* d2 = head2;
+        
+        while(d1 != d2){
+            d1 = d1 == NULL ? head2 : d1->next;
+            d2 = d2 == NULL ? head1 : d2->next;
+        }
+        return d1->data;
+    }
+};
+
+// Tc: O(N) | Sc: O(1)
