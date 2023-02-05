@@ -1,0 +1,62 @@
+/*
+You are given an integer array banned and two integers n and maxSum. You are choosing some number of integers following the below rules:
+
+    The chosen integers have to be in the range [1, n].
+    Each integer can be chosen at most once.
+    The chosen integers should not be in the array banned.
+    The sum of the chosen integers should not exceed maxSum.
+
+Return the maximum number of integers you can choose following the mentioned rules.
+
+Example 1:
+Input: banned = [1,6,5], n = 5, maxSum = 6
+Output: 2
+Explanation: You can choose the integers 2 and 4.
+2 and 4 are from the range [1, 5], both did not appear in banned, and their sum is 6, which did not exceed maxSum.
+
+*/
+// Method 1: Using array to count banned elements
+
+class Solution {
+public:
+    bool b[10005];
+    int maxCount(vector<int>& banned, int n, int maxSum) {
+        for(auto &c: banned) b[c] = 1;
+        int sum = 0; 
+        int count = 0;
+        for(int i = 1; i <= n; i++){
+            if(b[i] != 1){
+                sum += i;
+                if(sum > maxSum) break;
+                count++;
+            }
+            
+        }
+        return count;
+    }
+};
+// Tc: O(2 * N) | SC: O(constant size) 
+
+// Method 2: Using set
+class Solution {
+public:
+    int maxCount(vector<int>& banned, int n, int maxSum) {
+        int ans = 0;
+        unordered_set <int> s;
+        for(auto n: banned) s.insert(n);   // O(log N)
+        for(int i = 1; i <= n; i++){       // O(N)
+            if(s.find(i) == s.end() && maxSum - i >= 0){  // find takes O(log N)
+                ans++;
+                maxSum -= i;
+            }
+        }
+        return ans;
+    }
+};
+
+/*
+// Tc: O(N) | SC: O(N)
+Simply put all banned items into a unordered set and then
+start from 1 to check each values present in set or not if not
+then count it and add it to sum.
+*/
