@@ -1,0 +1,49 @@
+/*
+Question:
+Given a Binary Search Tree with unique node values and a target value. You have to find the node whose data is equal to target and 
+return the sum of all descendant node's data which are vertically below the target node. Initially, you are at the root node.
+Note: If target node is not present in bst then return -1.
+eg. Target = 25
+Output: 52
+Explanation: Vertically below 25 is 22, 30 and their sum is 52.
+
+Intuition
+Idea is to use the property of the binary search tree. Check if the target value is present or not. 
+If it is present return the sum of all descendant node's data which are vertically below the target node else return -1.
+
+Approach:
+- First search the target node. If not found then return -1, else traverse downward. 
+- Maintain a value at function parameter that signifies distance from target node. i.e: when go left add -1, when right add +1. 
+- If at any level the parametre is 0, then add that node's value to the resultant sum.
+*/
+
+class Solution{
+public:
+    // Using recursive call method to search 
+    Node* search(Node* root, int target){
+        if(root == NULL) return NULL;
+        if(root->data == target) return root;
+        if(root->data > target) search(root->left, target);
+        else  search(root->right, target);
+    }
+    
+    void solve(Node* root, int pos, long long int &sum){
+        if(root == NULL) return;
+        if(pos == 0) sum += root->data;
+        solve(root->left, pos-1, sum);
+        solve(root->right, pos+1, sum);
+    }
+    
+    long long int verticallyDownBST(Node *root,int target){
+        Node* tnode = search(root,target);
+        if(tnode == NULL) return -1;
+        long long int sum = 0;
+        solve(tnode->left, -1, sum);
+        solve(tnode->right, 1, sum);
+        return sum;
+    }
+};
+
+Complexity
+Time Complexity: As we are visiting each node once, so the time complexity is O(N).
+Space Complexity: as we are using recursive functions, so the space complexity is O(height of the tree).
