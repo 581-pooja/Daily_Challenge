@@ -1,0 +1,79 @@
+/*
+Question:
+You are visiting a farm that has a single row of fruit trees arranged from left to right. 
+The trees are represented by an integer array fruits where fruits[i] is the type of fruit the ith tree produces.
+You want to collect as much fruit as possible. However, the owner has some strict rules that you must follow:
+- You only have two baskets, and each basket can only hold a single type of fruit. There is no limit on the amount of fruit each basket can hold.
+- Starting from any tree of your choice, you must pick exactly one fruit from every tree (including the start tree) while moving to the right.
+The picked fruits must fit in one of your baskets.
+- Once you reach a tree with fruit that cannot fit in your baskets, you must stop.
+Given the integer array fruits, return the maximum number of fruits you can pick.
+
+Example 1:
+Input: fruits = [1,2,1]
+Output: 3
+Explanation: We can pick from all 3 trees.
+
+Example 2:
+Input: fruits = [0,1,2,2]
+Output: 3
+Explanation: We can pick from trees [1,2,2].
+If we had started at the first tree, we would only pick from trees [0,1].
+
+Example 3:
+Input: fruits = [1,2,3,2,2]
+Output: 4
+Explanation: We can pick from trees [2,3,2,2].
+If we had started at the first tree, we would only pick from trees [1,2].
+
+Approach: Used sliding window concept : from right we will add new fruits and if the fruits types > 2 then we will reduce fruits the left side
+*/
+
+class Solution {
+public:
+    int totalFruit(vector<int>& fruits) {
+        // We use a hash map 'basket' to store the number of each type of fruit
+        unordered_map<int, int> basket;
+        int left = 0, maxPicked = 0;
+        int n = fruits.size();
+
+        // add fruits from the right index (right) of the window
+        for(int right = 0; right < n; right++){
+            basket[fruits[right]]++;
+
+            // If the current window has more than 2 types of fruit,
+            // we remove fruit from the left index (left) of the window,
+            // until the window has only 2 types of fruit.
+            while(basket.size() > 2){
+                basket[fruits[left]]--;
+                if(basket[fruits[left]] == 0){
+                    basket.erase(fruits[left]);
+                }
+                left++;
+            }
+
+            // update maxPicked
+            maxPicked = max(maxPicked, right - left + 1);
+        }
+        // Return maxPicked as the maximum number of fruits we can collect.
+        return maxPicked;
+    }
+};
+
+/*
+Complexity Analysis
+Let n be the length of the input array fruits.
+
+Time complexity: O(n)
+- Similarly, both indexes left and right are only monotonically increasing during the iteration, thus we have at most 2*n steps,
+- At each step, we update the hash set by addition or deletion of one fruit, which takes constant time. Note that the number of additions or deletions does not exceed n.
+- To sum up, the overall time complexity is O(n)
+
+Space complexity: O(1)
+- We maintain the number of fruit types contained in the window in time. Therefore, at any given time, 
+there are at most 3 types of fruits in the window or the hash map basket.
+In summary, the space complexity is O(1). since constant size
+
+https://leetcode.com/problems/fruit-into-baskets/solutions/2960000/fruit-into-baskets/
+
+*/
