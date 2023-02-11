@@ -1,0 +1,56 @@
+/* Question:
+The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: 
+
+P   A   H   N
+A P L S I I G
+Y   I   R
+
+And then read line by line: "PAHNAPLSIIGYIR"
+
+*/
+
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        if(numRows == 1) return s;
+        string answer;
+        int n = s.size();
+        int charsInSection = 2 * (numRows - 1);
+        for(int curRow = 0; currRow < numRows; curRow++){
+            int index = curRow;
+            while(index < n){
+                answer += s[index];
+                // If currRow is not the first or last row
+                // then we have to add one more character of current section
+                if(curRow != 0 && curRow != numRow - 1){
+                    int charsInBetween = charsInSection - 2 * curRow;
+                    int secondIndex = index + charsInBetween;
+
+                    if(secondIndex < n){
+                        answer += s[secondIndex];
+                    }
+                }
+                // Jump to same row's first character of next section
+                index += charsInSection;
+            }
+        }
+        return answer;
+    }
+};
+
+/* 
+Tc: O(length of string)
+Algorithm
+1. Initialize variables:
+- answer, an empty string to store the final result.
+- n, length of the input string.
+- charsInSection, to store the number of characters in each section we defined.
+
+2. Iterate on each row from numRows:
+- index will start at the first character in the current row, i.e. index is equal to currRow.
+- We will traverse in the current row and append all characters to the answer string. First, we append the first character of the current section. 
+If the current row is not the first or last row then we append the second character of the current section. 
+Then update the index to jump to the next section in the current row and repeat this process again.
+
+3. Return answer.
+*/
