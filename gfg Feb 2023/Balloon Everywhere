@@ -1,0 +1,72 @@
+/* Question:
+Bob is very fond of balloons. Once he visited an amusement park with his mother. The mother told Bob that she would buy him a balloon only if he answer her problem right. She gave Bob a string S [contains only lowercase characters] and asked him to use the characters of string to form as many instances of the word "balloon" as possible. 
+Return the maximum number of instances that can be formed.
+Help Bob to solve the problem.
+Note: You can use each character in the string at most once.
+Example 1:
+Input:
+S: nlaebolko
+Output: 1
+Explanation:
+Here, the number of occurence of 'b' = 1
+of occurence of 'a' = 1
+of occurence of 'l' = 2
+of occurence of 'o' = 2
+of occurence of 'n' = 1
+So, we can form 1 "balloon" using the letters.
+
+Example 2: 
+Input:
+S: loonbalxballpoon
+Output: 2
+Explanation:
+Here, the number of occurence of 'b' = 2
+of occurence of 'a' = 2
+of occurence of 'l' = 4
+of occurence of 'o' = 4
+of occurence of 'n' = 2
+So, we can form 2 "balloon" using the letters.
+*/
+
+class Solution{
+public:
+    int maxInstance(string s){
+        // using array/vector of size 26 to record the frequency of char in given string
+        vector<int> freq(26,0);
+        for(int i=0;i<s.length();i++) {
+            freq[s[i]-'a']++;
+        }
+        
+        // if i = 0 i.e. a or i = 1 i.e. b or i = 13 ie. n take min of all the frequency
+        int m1=s.length();
+        int m2=s.length();
+        for(int i=0;i<26;i++) {
+            if(i==0 || i==1 || i==13) {
+                m1 = min(m1,freq[i]);
+            } 
+            // if i = 14 i.e. o or i = 11 i.e. l take min of all the frequency
+            else if(i==14 || i==11) {
+                m2 = min(m2,freq[i]);
+            }
+        }
+        // balloon since l = 2 , o = 2 so divide by 2
+        return min(m1,m2/2);
+    }
+};
+
+// Tc: O(n) + O(26) | Sc: O(26) (frequency array)
+
+/*
+Expected Approach
+Intuition: Idea is to count the frequency of characters present in the string.
+
+Implementation
+Step 1: Create a vector of int of size 26, initially filled with zero.
+Step 2: run a loop over the string and count the frequency of each character present in the string.
+Step 3: ans will minimum of frequency of ‘b’, ‘a’, ‘n’, (frequency of ‘l’)/ 2 and (frequency of ‘o’)/2,
+Step 4: Return the answer;
+Complexity
+
+Time Complexity: As we are visiting each character of the string once, So the time complexity is O(N).
+Space Complexity: As we are storing the frequency of 26 characters, so the space complexity is O(26)
+*/
