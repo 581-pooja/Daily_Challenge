@@ -1,0 +1,63 @@
+/*
+Question:
+Given two strings s and p, return an array of all the start indices of p's anagrams in s. You may return the answer in any order.
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+Example 1:
+Input: s = "cbaebabacd", p = "abc"
+Output: [0,6]
+Explanation:
+The substring with start index = 0 is "cba", which is an anagram of "abc".
+The substring with start index = 6 is "bac", which is an anagram of "abc".
+
+Example 2:
+Input: s = "abab", p = "ab"
+Output: [0,1,2]
+Explanation:
+The substring with start index = 0 is "ab", which is an anagram of "ab".
+The substring with start index = 1 is "ba", which is an anagram of "ab".
+The substring with start index = 2 is "ab", which is an anagram of "ab".
+
+Intution:
+Sliding Window Approach : using vector to store the frequency of pattern and s string
+- Calculate frequency of the patttern and string
+- if both vector freq_p & window are equal means if is anagram (1. same length 2. same unique characters 3. unique characters with same frequency) then put start in ans
+- if not equal then move to next window
+*/
+
+class Solution {
+public:
+    // Sliding Window Approach : using vector to store the frequency of pattern and s string
+    vector<int> findAnagrams(string s, string p) {
+        vector <int> window(26, 0); // window stores the current window unique character frequency
+        vector <int> freq_p(26, 0); // freq_p stores the frequency of the unique character in pattern
+        vector<int> ans;
+
+        // if pattern is greater than size of string
+        if(s.size() < p.size()) return {};
+
+        int i;
+        for(i = 0; i < p.size(); i++){
+            // compute the frequency of each char for the first window
+            freq_p[p[i] - 'a']++;
+            window[s[i] - 'a']++;
+        }
+
+        if(freq_p == window) ans.push_back(0);
+
+        // search the remaining windows and freqency of pattern will be constant
+        int start = 0, end = i;
+        while(end < s.size()){
+            // remove char at 'start' index and add char at 'end' index
+            --window[s[start] - 'a'];   // abcd
+            ++window[s[end] - 'a'];     // start[a] reduce and increment for end[d]
+
+            if(freq_p == window) ans.push_back(start+1); // since 0-based indexing
+            end++; start++;
+        }
+        return ans;
+    }
+};
+
+// Tc: O(s * 26) (since we are taking whole s length * for matching (freq_p == window) takes 26 aplhabets comparing )
+// Tc: O(len(s) * Alphabet size) 
+// Sc: O(1) (since vector freq_p & window are of constant size 26)
