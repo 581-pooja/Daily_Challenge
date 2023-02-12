@@ -1,0 +1,142 @@
+// Method 1:
+class Solution{
+public:
+// To check wheather number is prime or not
+bool isPrime(int n){
+    if (n <= 1)
+        return false;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0)
+            return false;
+    }
+    return true;
+}
+
+// To create Prime Numbers List
+    Node *primeList(Node *head){
+        Node *curr=head;
+        int x=curr->val;
+        
+        while(curr!=NULL){
+             int x = curr->val;
+            // CASE 2: For a number as 1, we can't go to left side, 
+            // since it will be negative , so nearest prime no. is 2 only.
+             if(x == 1){
+                 curr->val=2;
+             }
+             // CASE 3: For rest of the cases , do left traversal and righttraversal and check which is shortest. 
+             else{      
+                for(int i=0; i < x; i++){    // i value should be less than x
+                    // CASE 1: For given number as prime number, no action to be taken.
+                    // 5 - 0 = 5 which is prime 
+                    // Doing left shift towards smaller number
+                    if(isPrime(abs(i-x))){
+                        curr->val=abs(i-x);
+                        break;
+                    }
+                    // Doing right shift towards bigger numbers
+                   else if(isPrime(i+x)){
+                        curr->val=i+x;
+                        break;
+                    }
+                }
+             }
+        curr=curr->next;
+        }
+        return head;
+    }
+};
+
+// Method : 2
+class Solution{
+public:
+// To check wheather number is prime or not
+bool isPrime(int n){
+    if (n <= 1 or n<=0) return false;
+    for (int i = 2; i <= sqrt(n); i++) {
+        if (n % i == 0)
+            return false;
+    }
+    return true;
+}
+// To create Prime Numbers List
+Node *primeList(Node *head){
+    Node *curr=head;
+    int x=curr->val;
+
+    while(curr!=NULL){
+         int x = curr->val;
+        // CASE 2: For a number as 1, we can't go to left side, 
+        // since it will be negative , so nearest prime no. is 2 only.
+         if(x == 1){
+             curr->val=2;
+         }
+         // CASE 3: For rest of the cases , do left traversal and righttraversal and check which is shortest. 
+         else{      
+            for(int i=0; i < x; i++){    // i value should be less than x
+                // CASE 1: For given number as prime number, no action to be taken.
+                // 5 - 0 = 5 which is prime 
+                // Doing left shift towards smaller number
+                if(isPrime(abs(i-x))){
+                    curr->val=abs(i-x);
+                    break;
+                }
+                // Doing right shift towards bigger numbers
+               else if(isPrime(i+x)){
+                    curr->val=i+x;
+                    break;
+                }
+            }
+         }
+    curr=curr->next;
+    }
+    return head;
+}
+};
+
+/*
+You are given the head of a linked list. You have to replace all the values of the nodes with the nearest prime number. 
+If more than one prime number exists at an equal distance, choose the smallest one.
+Example 1:
+Input:
+2 → 6 → 10
+Output:
+2 → 5 → 11
+Explanation:
+The nearest prime of 2 is 2 itself.
+The nearest primes of 6 are 5 and 7,
+since 5 is smaller so, 5 will be chosen.
+The nearest prime of 10 is 11.
+
+Example 2:
+Input:
+1 → 15 → 20
+Output:
+2 → 13 → 19
+Explanation:
+The nearest prime of 1 is 2.
+The nearest primes of 15 are 13 and 17,
+since 13 is smaller so, 13 will be chosen.
+The nearest prime of 20 is 19.
+
+Intuition
+Idea is to visit both sides of the number and check if it is a prime no or not. We have to check the no is prime or not in O(sqrt(number)) time.
+
+Implementation
+Step 1: Loop over the linked list.
+   Step 2: If node value is 1, replace it with 2
+   Step 3: while the node value is not prime decrease the number by 1.
+   Step 4: while the node value is not prime increase the number by 1.
+   Step 5: Now update the node value with the nearest prime number.
+
+How to check if it is a prime number or not.
+Step 1: if value of n is 1 return false
+Step 2: if value of n is 2 or 3 return true
+Step 3: run a loop from 2 to sqrt of n
+  if n%i == 0 return false
+Step 4: return true
+Complexity
+
+Time Complexity: As for each no we are checking the number and its nearest numbers if it is prime, so the time complexity is O(number of nodes * sqrt(value of node)).
+Space Complexity: As we are not using any extra space, so the space complexity is O(1).
+*/
