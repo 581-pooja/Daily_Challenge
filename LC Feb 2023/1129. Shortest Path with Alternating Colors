@@ -1,0 +1,89 @@
+class Solution {
+public:
+    // Using BFS Taversal
+    vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& redEdges, vector<vector<int>>& blueEdges) {
+        vector<vector<pair<int,int> >> adj(n);
+        // {node, colour}
+        // creating adjcency list 
+        // 0 -> {1, 0}, {2, 0}, {2, 1} {node , colour}
+        for(auto &redEdge: redEdges){
+            adj[redEdge[0]].push_back({redEdge[1], 0}); // since red color: 0
+        }
+        for(auto &blueEdge: blueEdges){
+            adj[blueEdge[0]].push_back({blueEdge[1], 1}); // since blue color: 1
+        }
+
+        vector<int> ans(n, -1);
+        vector<vector<bool>> vis(n, vector<bool>(2)); // visit (node, color)
+        queue <vector<int>> q;   // queue <node, steps, color>
+
+        // Start with node 0, with number of steps as 0 and undefined color -1.
+        q.push({0, 0, -1});
+        vis[0][1] = vis[0][0] = true;
+        ans[0] = 0;
+
+        while(!q.empty()){
+            auto ele = q.front();
+            int node = ele[0];
+            int steps = ele[1];
+            int prevColor = ele[2];
+            q.pop();
+
+            // same path should not to be visited & path should having opposite color than previous node color
+            for(auto &[adjNode, color]: adj[node]){
+                if(!vis[adjNode][color] && color != prevColor){
+                    vis[adjNode][color] = true;
+                    q.push({adjNode, 1 + steps , color});
+                    if(ans[adjNode] == -1) ans[adjNode] = 1 + steps; // since path visited node first will have minimum steps since using BFS
+                }
+            }
+        }
+        return ans;
+    }
+};
+
+// Tc: O(N + E) | Sc: O(N+E) (adj list, queue, vis)
+/*
+Complexity Analysis
+Here n is the number of nodes and e is the total number of blue and red edges.
+
+Time complexity: O(n+e)
+- The complexity would be similar to the standard BFS algorithm since we’re iterating at most twice over each node.
+- Each queue operation in the BFS algorithm takes O(1) time, and a single node can only be pushed onto the queue twice, leading to O(n) operations for n nodes. 
+- We iterate over all the neighbors of each node that is popped out of the queue, so for an undirected edge, a given edge could be iterated at most twice, 
+- resulting in O(e) operations total for all the nodes. As a result, the total time required is O(n+e)
+
+Space complexity: O(n+e)
+- Building the adjacency list takes O(e) space.
+- The BFS queue takes O(n) because each vertex is added at most twice in the form of triplet of integers.
+The other visit and answers arrays take O(n) space.
+
+Intuition
+A breadth-first search is a good algorithm to use if we want to find the shortest path in an unweighted graph. 
+The property of BFS is that the first time a node is reached during the traversal, it was reached in the minimum possible steps from the source.
+
+The path used in BFS traversal always has the least number of edges. The BFS algorithm does a level-wise iteration of the graph. 
+As a result, it first finds all paths that are one edge away from the source node, followed by all paths that are two edges away from the source node, and so on. 
+This allows BFS to find the shortest path in terms of steps from the source node to any other node. It is implemented with a queue. 
+We can use the BFS algorithm here as well, with some modifications.
+
+Question:
+You are given an integer n, the number of nodes in a directed graph where the nodes are labeled from 0 to n - 1. Each edge is red or blue in this graph, 
+and there could be self-edges and parallel edges.
+
+You are given two arrays redEdges and blueEdges where:
+
+    redEdges[i] = [ai, bi] indicates that there is a directed red edge from node ai to node bi in the graph, and
+    blueEdges[j] = [uj, vj] indicates that there is a directed blue edge from node uj to node vj in the graph.
+
+Return an array answer of length n, where each answer[x] is the length of the shortest path from node 0 to node x such that the edge colors alternate along the path, 
+or -1 if such a path does not exist.
+
+Example 1:
+Input: n = 3, redEdges = [[0,1],[1,2]], blueEdges = []
+Output: [0,1,-1]
+
+Example 2:
+Input: n = 3, redEdges = [[0,1]], blueEdges = [[2,1]]
+Output: [0,1,-1]
+*/
