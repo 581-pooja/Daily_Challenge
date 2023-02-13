@@ -1,0 +1,57 @@
+class Solution{
+public:
+    int inSequence(int A, int B, int C){
+        // edge case
+        if(C == 0 && A == B) return 1;
+        // Formula to find n
+        double n = (double) (B - A)/ C + 1;
+        // value of n should be positive and integers not decimal if decimal means B value is not present
+        if(n != int(n)) return 0;  // value of n convert to int if decimal it will not be equal
+        // n should be positive    // n = 0.25 then int(0.25) = 0 => 0.25 != 0
+        return n > 0 ? 1 : 0;
+    }
+};
+// TC: O(1) | SC: O(1)
+
+class Solution{
+public:
+    int inSequence(int A, int B, int C){
+        if(C == 0 && A == B) return 1;
+        double n = (double) (B - A)/ C + 1;
+        if(n != int(n)) return 0;
+        return n > 0 ? 1 : 0;
+    }
+};
+
+/*
+Question:
+Given three integers  'A' denoting the first term of an arithmetic sequence , 'C' denoting the common difference of an arithmetic sequence and an integer 'B'. 
+you need to tell whether 'B' exists in the arithmetic sequence or not. Return 1 if B is present in the sequence. Otherwise, returns 0.
+
+Example 1:
+Input: A = 1, B = 3, C = 2
+Output: 1
+Explaination: 3 is the second term of the sequence starting with 1 and having a common difference 2.
+
+Example 2:
+Input: A = 1, B = 2, C = 3
+Output: 0
+Explaination: 2 is not present in the sequence.
+
+Let's Understand the Problem And Approach:
+
+A , A + C , A + 2C , ........... , A + (n-1)C 
+and nth term of arithmetic sequence = A + (n-1)C
+       B = A + ( n - 1 )*C;
+    Question me A , B , C given hai then n ki value se decide krenge ki B sequence ka part h ya nhi 
+        n = (B - A) / C + 1;
+ Agar ye n ki value positive integer aati h to B sequence ka part jarur hoga 
+ 
+But n +ve integer hi ku aaega ?
+- question me given hai ki A , B and C integers hai that's why n bhi integer hoga( because itn / int == int)
+- n positive hoga kuki squence to type ki ho skti hai increasing and decreasing
+- Jb common difference (C) +ve hoga to sequence increasing hogi iss condition me (B - A) +ve milega 
+- Jb common difference(C)  -ve hoga to sequence decreasing hogi uss conditon me  (B- A) -ve milega (dry run using negtive values)
+ Corner Case :
+when ,  C == 0  and  A == B  
+*/
