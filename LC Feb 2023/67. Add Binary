@@ -1,0 +1,76 @@
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        int n = a.size(), m = b.size();
+        string sum;
+        int carry = 0;
+        
+        int i = n - 1, j = m - 1;
+        while (i >= 0 || j >= 0 || carry > 0){
+            if (i >= 0) {
+                carry += a[i] - '0';
+                i -= 1;
+            }
+            if (j >= 0) {
+                carry += b[j] - '0';
+                j -= 1;
+            }
+            // if carry = 2 or 0 then 2%0 = 0 but if carry = 3 then 3%2 = 1, or 1%2 = 1, 0%2 = 0
+            sum = to_string(carry % 2) + sum;
+            carry /= 2;                 // carry = 3/2 = 1, 2/2 = 1, 0/1 = 0, 1/2 = 0 
+        }
+        return sum;
+    }
+};
+// TC: O(N) | SC: O(1)
+
+
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        bool carry = false;
+        string ans = "";
+        for(int i = a.size()-1, j = b.size()-1; i >= 0 || j >= 0; i--, j--){
+            int n1 = 0, n2 = 0, n3 = 0;
+            
+            if(i >= 0) n1 = a[i] - '0';  // '1' - '0' = 1 OR '0' - '0' = 0
+            if(j >= 0) n2 = b[j] - '0';
+            if(carry) n3 = 1;
+
+            if(n1 + n2 + n3 == 3){
+                ans = "1" + ans;
+                carry = true;
+            }
+            else if(n1 + n2 + n3 == 2){
+                ans = "0" + ans;
+                carry = true;
+            }
+            else if(n1 + n2 + n3 == 1){
+                ans = "1" + ans;
+                carry = false;
+            }
+            else{
+                ans = "0" + ans;
+                carry = false;
+            }
+        }
+        if(carry) ans = "1" + ans;
+        return ans;
+    }
+};
+
+// TC: O(N) | SC: O(1)
+
+/*
+Question:
+Given two binary strings a and b, return their sum as a binary string.
+
+Example 1:
+Input: a = "11", b = "1"
+Output: "100"
+
+Example 2:
+Input: a = "1010", b = "1011"
+Output: "10101"
+
+*/
