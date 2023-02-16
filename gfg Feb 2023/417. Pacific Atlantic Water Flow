@@ -1,0 +1,96 @@
+class Solution {
+public:
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& ht) {
+        vector<vector<int>> ans;
+        int n = ht.size(), m = ht[0].size();
+        if(n < 1) return ans; // return {}
+
+        // creating two visited matrix : pacific and atlantic
+        vector<vector<int>> pacific(n, vector<int> (m, 0));
+        vector<vector<int>> atlantic(n, vector<int> (m, 0));
+
+        // DFS Calling for row: 0 and n-1
+        for(int col = 0; col < m; col++){
+            dfs(ht, 0, col, INT_MIN, pacific);
+            dfs(ht, n-1, col, INT_MIN, atlantic);
+        }
+        // DFS Calling for column: 0 and m-1
+        for(int row = 0; row < n; row++){
+            dfs(ht, row, 0, INT_MIN, pacific);
+            dfs(ht, row, m-1, INT_MIN, atlantic);
+        }
+
+        // Counting intersection between pacific & atlantic matrix
+        for(int i = 0; i < n; i++ ){
+            for(int j = 0; j < m; j++){
+                if(pacific[i][j] == 1 && atlantic[i][j] == 1){
+                    ans.push_back({i, j});
+                }
+            }
+        }
+        return ans;
+    }
+
+    void dfs(vector<vector<int>> &ht, int i, int j, int prev, vector<vector<int>> &ocean){
+        // Out of Boundary conditions
+        if(i < 0 || j < 0 || i >= ht.size() || j >= ht[0].size()) return;
+        // if already cell is visited then return 
+        if(ocean[i][j] == 1) return;
+        if(ht[i][j] < prev) return;     // doing reverse so prev = 4 < ahead = 5 else return
+
+        ocean[i][j] = 1;        // mark visited
+
+        // Doing dfs for 4 direction
+        dfs(ht, i-1, j, ht[i][j], ocean);   // Up
+        dfs(ht, i, j+1, ht[i][j], ocean);   // Right
+        dfs(ht, i+1, j, ht[i][j], ocean);   // Down
+        dfs(ht, i, j-1, ht[i][j], ocean);   // Left
+    }
+};
+
+/*
+Time Complexity : O(M*N*4), When worst case occur then all cells are reachable to both oceans and also visited twice. And this will happened only when all elements are become equal.
+DFS * 4 direction + for loop
+
+Space Complexity : O(M*N), to mark the atlantic and pacific visited cells
+Pacific & atlantic visisted matrix, RSS
+*/
+
+/*
+Question:
+Geeks Island is represented by an N * M matrix mat. The island is touched by the Indian Ocean from the top and left edges and the Arabian Sea from the right and 
+bottom edges. Each element of the matrix represents the height of the cell.
+Due to the rainy season, the island receives a lot of rainfall, and the water can flow in four directions(up, down, left, or right) 
+from one cell to another one with height equal or lower.
+You need to find the number of cells & co-ordinates from where water can flow to both the Indian Ocean and the Arabian Sea.
+
+Input: heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]
+Output: [[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]
+Explanation: The following cells can flow to the Pacific and Atlantic oceans, as shown below:
+[0,4]: [0,4] -> Pacific Ocean 
+       [0,4] -> Atlantic Ocean
+[1,3]: [1,3] -> [0,3] -> Pacific Ocean 
+       [1,3] -> [1,4] -> Atlantic Ocean
+[1,4]: [1,4] -> [1,3] -> [0,3] -> Pacific Ocean 
+       [1,4] -> Atlantic Ocean
+[2,2]: [2,2] -> [1,2] -> [0,2] -> Pacific Ocean 
+       [2,2] -> [2,3] -> [2,4] -> Atlantic Ocean
+[3,0]: [3,0] -> Pacific Ocean 
+       [3,0] -> [4,0] -> Atlantic Ocean
+[3,1]: [3,1] -> [3,0] -> Pacific Ocean 
+       [3,1] -> [4,1] -> Atlantic Ocean
+[4,0]: [4,0] -> Pacific Ocean 
+       [4,0] -> Atlantic Ocean
+Note that there are other possible paths for these cells to flow to the Pacific and Atlantic oceans.
+
+Example 2:
+Input: heights = [[1]]
+Output: [[0,0]]
+Explanation: The water can flow from the only cell to the Pacific and Atlantic oceans.
+
+Intuition:
+Instead of going from each element to the edges of the sea, we can check from the edges to which elements we can go.
+Implementation:
+We have to traverse from all the co-ordinates connected to Indian ocean and from Arabian sea. 
+Here, we have to use depth first search algorithm to traverse the elements. 
+*/
