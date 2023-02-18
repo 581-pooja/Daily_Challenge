@@ -1,0 +1,78 @@
+// Intuition: The idea is that we can store the stones which are already visited and mark them bad stones or good stones. So we don't need to visit that stones again.
+
+//User function Template for C++
+class Solution{
+public:
+    int solve(vector<int> &arr, int i, vector<int> &vis){
+        if(i >= arr.size() | i < 0) return 1;
+        if(vis[i] != -1) return vis[i];
+        vis[i] = 0;    
+        vis[i] = solve(arr, i + arr[i], vis);   
+        return vis[i];
+    }
+    int goodStones(int n,vector<int> &arr){
+        // -1 : Not visited
+        // 0 : Bad stone
+        // 1 : Good stone
+        vector<int> vis(n, -1);
+        for(int i = 0; i < n; i++){
+            if(vis[i] == -1){
+                solve(arr, i, vis);
+            }
+        }
+        
+        int count = 0;
+        for(int i = 0; i < n; i++){
+            if(vis[i] == 1) count++;
+        }
+        return count;
+    }    
+};
+
+// same code but explanation
+
+class Solution{
+public:
+    // Using recursive function
+    int solve(vector<int> &arr, int i, vector<int> &vis){
+        // base condition to come out & accepted as Good Stone
+        if(i >= arr.size() | i < 0) return 1;
+        // if it is bad stone then anyway it will go in cycle so stop it and return bad stone i.e. 0
+        if(vis[i] != -1) return vis[i];
+        
+        vis[i] = 0;     // Initially puting all stones as bad stones
+        vis[i] = solve(arr, i + arr[i], vis);    // incase any stone found good stone then mark it
+        return vis[i];
+    }
+    int goodStones(int n,vector<int> &arr){
+        // -1 : Not visited
+        // 0 : Bad stone
+        // 1 : Good stone
+        vector<int> vis(n, -1);
+        // if stone not visited then check it type
+        for(int i = 0; i < n; i++){
+            if(vis[i] == -1){
+                solve(arr, i, vis);
+            }
+        }
+        
+        int count = 0;
+        for(int i = 0; i < n; i++){
+            // if stone is Good Stone then add in count
+            if(vis[i] == 1) count++;
+        }
+        return count;
+    }  
+    // TC: O(N) | SC: O(N) (Visited array)
+};
+
+/* Question: Bad Stones are defined as the stones in which if geeks steps, will reach a never ending loop whereas good stones are the stones which are safe 
+from never ending loops. Return the number of good stones in river.
+
+- Input: [2, 3, -1, 2, -2, 4, 1], Output: 3
+Explanation: Index 3, 5 and 6 are safe only. As index 1, 4, 2 forms a cycle and from index 0 you can go to index 2 which is part of cycle.
+
+Input: [1, 0, -3, 0, -5, 0], Output: 2
+Explanation: Index 2 and 4 are safe only. As index 0, 1, 3, 5 form cycle.
+
+*/
