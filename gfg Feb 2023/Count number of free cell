@@ -1,0 +1,53 @@
+// Formula used: (n*n - (rowVisited * n) - (colVisited * n) + (rowVisited * colVisited)) 
+
+class Solution{
+  public:
+  vector<long long int> countZero(int n, int k, vector<vector<int>>& arr){
+      // Using vector to store visited row & col
+      vector<int> row(n, 0);
+      vector<int> col(n, 0);
+      // To keep count of visited row & visited column
+      int row_count = 0;
+      int col_count = 0;
+      vector<long long int> ans;
+      
+      for(int i = 0; i < k; i++){
+          int r = arr[i][0] - 1;
+          int c = arr[i][1] - 1;
+          if(row[r] == 0) {
+              row[r] = 1;
+              row_count++;
+          }
+          if(col[c] == 0){
+              col[c] = 1;
+              col_count++;
+          } 
+          ans.push_back(n*n - (row_count * n) - (col_count * n) + (row_count * col_count));
+      }
+      return ans;
+  }
+  // TC: O(K) (depends on no of k) 
+  // SC: O(2 * N) (depends on number of row & no. of col for visited array)
+  
+/*
+Question:
+Suppose you have a Matrix size n*n, and given an integer k and a set of coordinates arr of size k*2. Initially, the matrix contains only 0. 
+You are given k tasks and for each task, you are given two coordinates (r = arr[i][0],c = arr[i][1]) [1 based index r and c]. 
+Where coordinates (r,c) denotes rth row and cth column of the given matrix.
+- You have to perform each task sequentially in the given order. For each task, You have to put 1 in all cells of rth row  and all cells of cth column.
+- After each task, You have to calculate the number of 0 present in the matrix and return it.
+
+Example 1:
+Input: n = 3, k= 3 arr = {{2, 2},{2, 3},{3, 2}}
+Output: 4 2 1
+Explanation: 
+After 1st Operation, all the 2nd row and all the 2nd column will be filled by 1. So remaning cell with value 0 will be 4
+After 2nd Operation, all the 2nd row and all the 3rd column will be filled by 1. So remaning cell with value 0 will be 2.
+After 3rd Operation cells having value 0 will be 1.
+
+Example 2:
+Input: n = 2, k = 2 arr = {{1, 2}, {1, 1}}
+Output: 1 0
+
+Formula used: (n*n - (rowVisited * n) - (colVisited * n) + (rowVisited * colVisited)) 
+  */
