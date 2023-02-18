@@ -1,0 +1,52 @@
+/*
+There is a string of size n containing only 'A' and 'O'. 'A' stands for Apple, and 'O' stands for Orange. 
+We have m number of spells, each spell allows us to convert an orange into an apple.
+Find the longest sequence of apples you can make, given a string and the value of m.
+
+Example 1:
+
+Input:
+N = 5 M = 1 arr[] = 'AAOAO'
+Output: 4 
+Explanation: Changing the orange at 3rd position into an apple gives us the maximum possible answer.
+
+
+Example 2:
+Input:N = 5 M = 1 arr = 'AOOAO'
+Output: 2
+Explanation: Changing any orange into an apple will give us a sequence of length 2.
+
+Intuition:
+We have to find the longest sequence of apples we can make. The idea is to calculate the maximum length of range containing at most m number of 'O'. 
+We can use 2 pointers approach to calculate the maximum length of range.
+Implementation:
+Step 1: Take 2 pointers on the string named start and end. This will be our current range where number of 'O' will not exceed m.
+Step 2: Maintain 2 variables named curr to store the current number of 'O' in the range and maxx to store the answer.
+Step 3: Initialize start and end with zero. Run a loop till end<n.
+     If arr[end] equals 'A', update the maxx if possible.
+    else increase curr by 1. If curr exceeds m, then run a loop till curr becomes m. In this loop, If arr[start] equals 'O', then decrease the value of curr by 1. 
+
+Complexity:
+Time Complexity: O(n)
+Space Complexity: O(1)
+*/
+
+class Solution{   
+public:
+    int appleSequences(int n, int m, string arr){
+        int start = 0, end = 0, count = 0;
+        int maxLen = 0;
+        while(end < n){
+            if(arr[end] == 'O') count++;
+            // if oranges more than m then remove 1 orange and take string from above it
+            while(count > m){
+                if(arr[start] == 'O') count--;
+                start++;
+            }
+            maxLen = max(maxLen, end-start+1);
+            end++;
+        }
+        return maxLen;
+    }
+};
+// Tc: O(N) | SC: O(1)
