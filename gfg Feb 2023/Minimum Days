@@ -1,0 +1,98 @@
+class Solution {
+  public:
+    int getMinimumDays(int N,string s, vector<int> &P) {
+        int count = 0;
+        for(int i = 1; i < N; i++){
+            if(s[i] == s[i-1]) count++;
+        }
+        
+        if(count == 0) return 0;
+        // 0 -> N on P[i] ,i is days  
+        for(int i = 0; i < N; i++){
+            int index = P[i];
+            if(index != 0 and s[index] == s[index - 1]) count--;
+            if(index != N-1 and s[index] == s[index + 1]) count--;
+            if(count == 0) return i + 1;    // return day + 1 since 0-index based
+            s[index] = '?';
+        }
+        return -1;
+    }
+};
+// Tc: O(N) | SC: O(1)
+
+/*
+Question:
+Given a string S of length N containing only lowercase alphabets. You are also given a permutation P of length N containing integers from 0 to N-1. In (i+1)'th day
+you can take the P[i] value of the permutation array and replace S[P[i]] with a '?'.
+
+For example in day 1, we can choose index of permutation array is i=0 and replace S[P[0]] with '?'.
+Similarly in day 2, we can choose index of permutation array is i=1. You can replace S[P[1]] with '?'.
+Similarly in day 3,we can choose index of permutation array is i=2. You can replace S[P[2]] with '?'.
+You have to tell the minimum number of days required, such that after it for all index i (0<=i<N-1), if S[i]!='?', then S[i]!=S[i+1].
+
+Example 1:
+Input: N = 4 S = "aabb"   P[] = {2, 1, 3, 0}
+Output: 2
+Explanation: In day 1, we replace S[P[0]] with '?'.  After that String S = "aa?b". As we can see S 
+still has character 'a' at index 0 and 1. In day 2, we replace S[P[1]] with '?'. After 
+that String S = "a??b". As we can see the String  has for all index i (0<=i<N-1), if S[i]!='?', then S[i]!=S[i+1].
+
+Example 2:
+Input: N = 4 S = "aaab"  P[] = {2, 3, 1, 0}
+Output: 3
+Explanation: We can see that the initial string 
+S = "aaab" has for all index i (0<=i<N-1), if S[i]!='?', then S[i]!=S[i+1].
+
+Intuition
+In (i+1)'th day you can take the P[i] value of the permutation array and replace S[P[i]] with a '?'. And we have to tell the minimum number of days required, 
+such that after it for all index i (0<=i<N-1), if S[i]!='?', then S[i]!=S[i+1].
+So if S[i]==S[i+1] or S[i]==S[i-1], we have to find the minimum number of days needed to make S[i]!=S[i+1] or S[i]!=S[i-1] respectively.
+
+Implementation
+Step 1: Run a loop from 0 to N, and count in how many positions S[i]==S[i+1].
+Step 2: if the count is zero return 0;
+Step 3: else run a loop from 0 to less than N.
+Step 4: Let’s say in=P[i].
+Step 5: If (in-1>=0 && S[in-1]==S[in]) decrease the counter by 1,
+Step 6: If (in+1>=0 && S[in+1]==S[in]) decrease the counter by 1,
+Step 7: put ‘?’ in S[in];
+Step 8: if the count becomes 0 return i+1;
+Complexity
+
+Time Complexity: As we are running a loop of size N, so the time complexity is O(N).
+Space Complexity: As we not using any extra space, so the space complexity is O(1).
+
+*/
+
+// Another Method:
+class Solution {
+  public:
+    int getMinimumDays(int n,string s, vector<int> &p) {
+        int count=0;
+        for(auto i=1;i<n;i++){
+            if(s[i]==s[i-1])count++;
+        }
+        int c=0;
+        for(auto i:p){
+            if(count==0)return c;
+            
+            if(i==0 and s[i]==s[i+1]){
+                count--;
+            }
+            else
+            if(i==n-1 and s[i]==s[i-1]){
+                count--;
+            }
+            else
+            if(s[i]==s[i+1] and s[i]==s[i-1]){
+                count-=2;
+            }
+            else if(s[i]==s[i-1] || s[i]==s[i+1]){
+                count--;
+            }
+            s[i]='?';
+            c++;
+        }
+        return n;
+    }
+};
