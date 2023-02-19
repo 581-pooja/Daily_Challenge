@@ -1,0 +1,61 @@
+/* Question: 
+There are M job applicants and N jobs. Each applicant has a subset of jobs that he/she is interested in. 
+Each job opening can only accept one applicant and a job applicant can be appointed for only one job. 
+Given a matrix G with M rows and N columns where G(i,j) denotes ith applicant is interested in the jth job. 
+Find the maximum number of applicants who can get the job.
+
+Example 1:
+Input: M = 3, N = 5 G = {{1,1,0,1,1},{0,1,0,0,1}, {1,1,0,1,1}}
+Output: 3
+Explanation: There is one of the possible
+assignment- First applicant gets the 1st job.
+Second applicant gets the 2nd job.
+Third applicant gets the 4th job.
+
+Example 2:
+Input: M = 6, N = 2 G = {{1,1},{0,1},{0,1},{0,1},{0,1},{1,0}}
+Output: 2
+Explanation: There is one of the possible
+assignment- First applicant gets the 1st job.
+Second applicant gets the 2nd job.
+*/
+
+class Solution {
+public:
+    vector<int> matching;
+    vector<int> vis;
+    
+	bool solve(int person, vector<vector<int>>&graph){
+	    for(int job = 0; job < graph[0].size(); job++){
+	        if(graph[person][job] == 1 and !vis[job]){
+	            vis[job] = 1;
+	            // if job is not assigned then assign it // matching[job] == -1
+	            // if job is assigned by another personthen check for another job 
+	            // if possible then it return true & then curren job can be assigned to curPerson
+	            
+	            if(matching[job] == -1 or solve(matching[job], graph)){
+	                matching[job] = person;
+	                return true;
+	            }
+	        }
+	    }
+	    return false;
+	}
+	
+	int maximumMatch(vector<vector<int>> &graph){
+	    int p = graph.size();
+	    int j = graph[0].size();
+	    int ans = 0;
+	    matching = vector<int> (j, -1);
+	    // 4 jobs : {-1, -1, -1, -1}
+	    
+	    for(int i = 0; i < p; i++){
+	        vis = vector<int> (j, 0);
+	        // visited array for 4 jobs: {0,0,0,0}
+	        if(solve(i, graph)) ans++;
+	    }
+	    return ans;
+	}
+};
+
+// TC: O(Person * Jobs) | SC: O(Jobs) (visited array)
