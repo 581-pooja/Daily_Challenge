@@ -1,0 +1,81 @@
+class Solution {
+public:
+    long long fuel;
+    long long dfs(int node, int parent, vector<vector<int>> &adj, int& seats){
+        // The node itself is one representative
+        int representatives = 1;
+        for(auto &child: adj[node]){
+            if(child != parent){
+                // add count of representatives in each child subtree to the parent subtree
+                representatives += dfs(child, node, adj, seats);
+            }
+        }
+
+        if(node != 0){
+            // count the fuel it takes to move to parent node
+            // Root node does not have any parent so we ignore it
+            fuel += ceil((double) representatives / seats);
+        }
+        return representatives;
+    }
+
+
+    long long minimumFuelCost(vector<vector<int>>& roads, int seats) {
+        int n = roads.size() + 1;   // 6 roads connected with 7 nodes so nodes = 1 + roads
+        vector<vector<int>> adj(n);
+        // creating adjcency list
+        for(auto &road: roads){
+            adj[road[0]].push_back(road[1]);
+            adj[road[1]].push_back(road[0]);
+        }
+        dfs(0, -1, adj, seats);
+        return fuel;
+    }
+};
+// TC: Normal DFS O(N + 2 * E) (since undirected graph)
+// SC: O(N) (Adjacency list) + O(N) (RSS)
+
+/*
+Question:
+There is a tree (i.e., a connected, undirected graph with no cycles) structure country network consisting of n cities numbered from 0 to n - 1 and exactly n - 1 roads.
+The capital city is city 0. You are given a 2D integer array roads where roads[i] = [ai, bi] denotes that there exists a bidirectional road connecting cities ai and bi.
+There is a meeting for the representatives of each city. The meeting is in the capital city.
+There is a car in each city. You are given an integer seats that indicates the number of seats in each car.
+A representative can use the car in their city to travel or change the car and ride with another representative. 
+
+Example 2:
+Input: roads = [[3,1],[3,2],[1,0],[0,4],[0,5],[4,6]], seats = 2
+Output: 7
+Explanation: 
+- Representative2 goes directly to city 3 with 1 liter of fuel.
+- Representative2 and representative3 go together to city 1 with 1 liter of fuel.
+- Representative2 and representative3 go together to the capital with 1 liter of fuel.
+- Representative1 goes directly to the capital with 1 liter of fuel.
+- Representative5 goes directly to the capital with 1 liter of fuel.
+- Representative6 goes directly to city 4 with 1 liter of fuel.
+- Representative4 and representative6 go together to the capital with 1 liter of fuel.
+It costs 7 liters of fuel at minimum. 
+It can be proven that 7 is the minimum number of liters of fuel needed.
+
+Approach : Normal DFS + while backtracking calculate fuel and no of cars and return representatives on every node.
+
+- We implement a dfs method that performs a DFS traversal and returns the number of representatives in the subtree of given node. 
+- We begin the traversal from root node 0.
+- we then calculate the number of cars and thus the fuel required to move all of the representatives to the parent node. 
+- To get the final answer, we add the fuel required to move representatives from all nodes to their respective parent nodes until we reach the root node.
+- The cost of traveling between two cities is one liter of fuel.
+- Return the minimum number of liters of fuel to reach the capital city.
+
+Complexity Analysis
+Here n is the number of nodes.
+
+    Time complexity: O(n).
+- The dfs function visits each node once, which takes O(n) time in total. 
+Because we have n - 1 undirected edges, each edge can only be iterated twice (by nodes at the end), 
+resulting in O(n) operations total while visiting all nodes.
+- We also need O(n) time to initialize the adjacency list.
+
+    Space complexity: O(n).
+- Building the adjacency list takes O(n) space.
+- The recursion call stack used by dfs can have no more than nnn elements in the worst-case scenario. It would take up O(n) space in that case.
+*/
