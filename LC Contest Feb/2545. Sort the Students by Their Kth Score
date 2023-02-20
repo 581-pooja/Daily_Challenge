@@ -1,0 +1,79 @@
+/*
+Question:
+There is a class with m students and n exams. You are given a 0-indexed m x n integer matrix score, where each row represents one student and 
+score[i][j] denotes the score the ith student got in the jth exam. The matrix score contains distinct integers only.
+You are also given an integer k. Sort the students (i.e., the rows of the matrix) by their scores in the kth (0-indexed) exam from the highest to the lowest.
+Return the matrix after sorting it.
+
+Example 1:
+
+Input: score = [[10,6,9,1],[7,5,11,2],[4,8,3,15]], k = 2
+Output: [[7,5,11,2],[10,6,9,1],[4,8,3,15]]
+Explanation: In the above diagram, S denotes the student, while E denotes the exam.
+- The student with index 1 scored 11 in exam 2, which is the highest score, so they got first place.
+- The student with index 0 scored 9 in exam 2, which is the second highest score, so they got second place.
+- The student with index 2 scored 3 in exam 2, which is the lowest score, so they got third place.
+*/
+
+// Method 1:
+class Solution {
+public:
+    vector<vector<int>> sortTheStudents(vector<vector<int>>& score, int k) {
+        int m = score.size();
+        int n = score[0].size();
+
+        // store {col value, index} in max heap
+        priority_queue <pair<int, int>> pq;
+        for(int i = 0; i < m; i++){
+            pq.push({score[i][k], i});
+        }
+
+        // now place rows first which have higher col value
+        vector<vector<int>> res;
+        while(!pq.empty()){
+            int row = pq.top().second;
+            pq.pop();
+            res.push_back(score[row]);
+        }
+        return res;
+    }
+};
+
+// Tc: O(M) + O(Log M) ~ O(M) (to push in pq)
+// sc: O(M) (M elements store in pq)
+
+// Method 2:
+class Comparator{
+    int k;
+    public:
+    Comparator(int k){
+        this->k = k;
+    }
+    bool operator()(vector<int> &v1, vector<int> &v2){
+        return v1[k] > v2[k];
+    }
+};
+
+class Solution {
+public:
+    vector<vector<int>> sortTheStudents(vector<vector<int>>& score, int k) {
+        sort(begin(score), end(score), Comparator(k));
+        return score;
+    }
+};
+
+// Tc: O(N * log N) | Sc: O(1)
+
+// Method 3:
+class Solution {
+public:
+    vector<vector<int>> sortTheStudents(vector<vector<int>>& score, int k) {
+        sort(score.begin(), score.end(), [&](vector<int> & a, vector<int> & b){
+            return a[k] > b[k];
+        });
+        return score; 
+
+    }
+};
+// Tc: O(N * log N) | Sc: O(1)
+
