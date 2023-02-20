@@ -38,6 +38,12 @@ public:
 };
 // Tc: O(N) | Sc: O(1)
 
+// eg: 15,498 => num[i] = 15 , num[j] = 498 so digits = > [4,9,8]
+// interating for d in digits
+// so val = 10 * 15 + 4 = 150 + 4 = 154
+// val = 154 * 10 + 9 = 1540 + 9 = 1549
+// val = 1549 * 10 + 8 = 15490 + 8 = 15498
+
 /* Question:
 You are given a 0-indexed integer array nums.
 The concatenation of two numbers is the number formed by concatenating their numerals.
