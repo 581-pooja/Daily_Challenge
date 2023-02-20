@@ -1,0 +1,109 @@
+/*
+Question:
+There exists an infinitely large grid. You are currently at point (1, 1), and you need to reach the point (targetX, targetY) using a finite number of steps.
+In one step, you can move from point (x, y) to any one of the following points:
+    (x, y - x)
+    (x - y, y)
+    (2 * x, y)
+    (x, 2 * y)
+Given two integers targetX and targetY representing the X-coordinate and Y-coordinate of your final position, 
+return true if you can reach the point from (1, 1) using some number of steps, and false otherwise.
+
+Example 1:
+
+Input: targetX = 6, targetY = 9
+Output: false
+Explanation: It is impossible to reach (6,9) from (1,1) using any sequence of moves, so false is returned.
+
+Example 2:
+
+Input: targetX = 4, targetY = 7
+Output: true
+Explanation: You can follow the path (1,1) -> (1,2) -> (1,4) -> (1,8) -> (1,7) -> (2,7) -> (4,7).
+
+Intuition
+
+Try go from (x, y) to (1,1)
+Consider the reverse operation of
+(x, y - x)
+(x - y, y)
+(2 * x, y)
+(x, 2 * y)
+
+that is
+(x, y + x)
+(x + y, y)
+(x / 2, y) if x % 2 == 0
+(x, y / 2) if y % 2 == 0
+
+Sufficient Condition
+
+Assume gcd(x,y) = 2 ^ k
+If x is even, we can go (x / 2, y)
+If y is even, we can go (x, y / 2)
+If both odd and x < y, we can go (x, (x+y)/2)
+If both odd and x > y, we can go ((x+y)/2, y)
+(x, y) can continue go smaller,
+until (x, y) both odd and x == y,
+that is x == y == 1
+
+Necessary Condition
+
+Assume x and y have a common divisor v bigger than 2,
+Since
+(x + y) % v == 0
+(x / 2) % v == 0 if x is even
+(y / 2) % v == 0 if y is even
+The new value always can be divided by v
+
+No matter what operation we use,
+we can't reach (1,1)
+
+To go from (x,y) to (1,1),
+we have the necessary condition :
+gcd(x,y) = 2 ^ k
+
+Conclusion
+
+Based on the Necessary Condition and Sufficient Condition,
+we conclude that
+"(1, 1) can go forward to (x, y)"
+equals to
+"(x, y) can go back to (1, 1)"
+equals
+gcd(x,y) is pow of 2.
+
+Pow of 2
+
+Many ways to check if x is pow of 2.
+
+Option 1
+We can continuely divide x by 2 and
+check if stops at 1.
+
+Option 2
+Also we can check x lowbit by x & -x.
+
+Complexity
+Time O(logX + logY))
+Space O(1)
+
+*/
+// Method 1:
+bool isReachable(int x, int y) {
+    int v = gcd(x, y);
+    while (v % 2 == 0)
+        v /= 2;
+    return v == 1;
+}
+
+// v % 2 == 0 (3%2 == 1) false so out of while loop and return v != 1 so return false
+// v % 2 == 0 (4%2 == 0) whileloop in 4/2 so v = 2 agin check condition v%2 == 0 so v/2 = 2/2 = 1 and finally v==1 so return true
+
+// Method 2:
+bool isReachable(int x, int y) {
+    int v = gcd(x, y);
+    return v == (v & -v);
+}
+    
+    
