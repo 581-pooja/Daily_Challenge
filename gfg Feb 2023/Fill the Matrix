@@ -1,0 +1,57 @@
+
+class Solution{   
+public:
+    int minIteration(int n, int m, int x, int y){    
+	    // visited and distance matrix
+	    vector<vector<int>> vis(n, vector<int> (m, 0));
+	    vector<vector<int>> dist(n, vector<int> (m, 0));
+	    // <<i,j>, steps> <co-ordinates, steps>
+	    queue<pair<pair<int,int>, int>> q;
+	    
+	    q.push({{x-1,y-1},0});
+	    vis[x-1][y-1] = 1;
+	    
+	    int delrow[] = {-1, 0, +1, 0};
+	    int delcol[] = {0, +1, 0, -1};
+        int maxi = 0;
+        // n x m x 4
+	    while(!q.empty()){
+	        int row = q.front().first.first;
+	        int col = q.front().first.second;
+	        int steps = q.front().second;
+	        q.pop();
+	        // marking steps in dist matrix
+	        dist[row][col] = steps;
+	        if(steps > maxi) maxi = steps;
+	        // for all 4 neighbours
+	        for(int i = 0; i < 4; i++){
+	            int nrow = row + delrow[i];
+	            int ncol = col + delcol[i];
+	            // check for valid unvisited cell
+	            if(nrow >= 0 && nrow < n && ncol >= 0 && ncol < m 
+	            && vis[nrow][ncol] == 0){
+	                vis[nrow][ncol] = 1;
+	                q.push({{nrow, ncol}, steps + 1});
+	            }
+	        }
+	    }
+	    // return distance matrix
+	    return maxi;
+    }
+};
+
+// TC: O(N * M * 4) (every cell 4 direction)
+// SC: O(N * M * 3) (co-ordinates(i,j), steps)
+
+/*
+Given a matrix with dimensions N x M, entirely filled with zeroes except for one position at co-ordinates X and Y containing '1'. 
+Find the minimum number of iterations in which the whole matrix can be filled with ones.
+Note: In one iteration, '1' can be filled in the 4 neighbouring elements of a cell containing '1'.
+Example 1:
+Input:
+N = 2, M = 3
+X = 2, Y = 3
+Output: 3 
+
+Explanation: 3 is the minimum possible number of iterations in which thematrix can be filled.
+*/
