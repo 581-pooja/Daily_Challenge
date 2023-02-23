@@ -1,47 +1,56 @@
 
 class Solution{   
 public:
-    int minIteration(int n, int m, int x, int y){    
-	    // visited and distance matrix
-	    vector<vector<int>> vis(n, vector<int> (m, 0));
-	    vector<vector<int>> dist(n, vector<int> (m, 0));
-	    // <<i,j>, steps> <co-ordinates, steps>
-	    queue<pair<pair<int,int>, int>> q;
-	    
-	    q.push({{x-1,y-1},0});
-	    vis[x-1][y-1] = 1;
-	    
-	    int delrow[] = {-1, 0, +1, 0};
-	    int delcol[] = {0, +1, 0, -1};
-        int maxi = 0;
-        // n x m x 4
-	    while(!q.empty()){
-	        int row = q.front().first.first;
-	        int col = q.front().first.second;
-	        int steps = q.front().second;
-	        q.pop();
-	        // marking steps in dist matrix
-	        dist[row][col] = steps;
-	        if(steps > maxi) maxi = steps;
-	        // for all 4 neighbours
-	        for(int i = 0; i < 4; i++){
-	            int nrow = row + delrow[i];
-	            int ncol = col + delcol[i];
-	            // check for valid unvisited cell
-	            if(nrow >= 0 && nrow < n && ncol >= 0 && ncol < m 
-	            && vis[nrow][ncol] == 0){
-	                vis[nrow][ncol] = 1;
-	                q.push({{nrow, ncol}, steps + 1});
-	            }
-	        }
+int minIteration(int n, int m, int x, int y){    
+    // visited and distance matrix
+    vector<vector<int>> vis(n, vector<int> (m, 0));
+    vector<vector<int>> dist(n, vector<int> (m, 0));
+    // <<i,j>, steps> <co-ordinates, steps>
+    queue<pair<pair<int,int>, int>> q;
+
+    q.push({{x-1,y-1},0});
+    vis[x-1][y-1] = 1;
+
+    int delrow[] = {-1, 0, +1, 0};
+    int delcol[] = {0, +1, 0, -1};
+    int maxi = 0;
+    // n x m x 4
+    while(!q.empty()){
+	int row = q.front().first.first;
+	int col = q.front().first.second;
+	int steps = q.front().second;
+	q.pop();
+	// marking steps in dist matrix
+	dist[row][col] = steps;
+	if(steps > maxi) maxi = steps;
+	// for all 4 neighbours
+	for(int i = 0; i < 4; i++){
+	    int nrow = row + delrow[i];
+	    int ncol = col + delcol[i];
+	    // check for valid unvisited cell
+	    if(nrow >= 0 && nrow < n && ncol >= 0 && ncol < m 
+	    && vis[nrow][ncol] == 0){
+		vis[nrow][ncol] = 1;
+		q.push({{nrow, ncol}, steps + 1});
 	    }
-	    // return distance matrix
-	    return maxi;
+	}
     }
+    // return distance matrix
+    return maxi;
+  }
 };
 
 // TC: O(N * M * 4) (every cell 4 direction)
 // SC: O(N * M * 3) (co-ordinates(i,j), steps)
+
+int minIteration(int N, int M, int x, int y){    
+    int ans=0;
+    for(int i=1;i<=N;i++)
+	for(int j=1;j<=M;j++)
+	    ans=max(ans,abs(x-i)+abs(y-j));
+    return ans;
+}
+// TC: O(N*M) SC: O(1)
 
 /*
 Given a matrix with dimensions N x M, entirely filled with zeroes except for one position at co-ordinates X and Y containing '1'. 
@@ -54,4 +63,20 @@ X = 2, Y = 3
 Output: 3 
 
 Explanation: 3 is the minimum possible number of iterations in which thematrix can be filled.
+
+Intuition
+If we observe carefully we can see that, from the coordinate (X, Y), if we want to fill coordinate (A, B) with 1, we just need to travel the manhattan distance.
+manhattan distance = |A-X| + |B-Y|, not we just need to find the highest manhattan distance.
+Implementation
+
+Step 1: set ans=0;
+Step 2: run a loop from i=1 to N
+   Step 3: run a loop from j=1 to M
+      Step 4: set ans=max(ans,abs(x-i)+abs(y-j));
+Step 5: return ans;
+Complexity
+
+Time Complexity: As we are visiting every cell of the matrix so the time complexity is O(N*M)
+Space Complexity: As we are not using any extra space so the space complexity is O(1)
+
 */
