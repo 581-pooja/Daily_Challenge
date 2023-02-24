@@ -1,4 +1,18 @@
 // Similar to 1383. Maximum Performance of a Team
+/*
+We iterate all pairs (A[i], B[i]) with B[i] from big to small,
+We keep the priority queue with maximum size of k.
+Each time when we introduce a new pair of (A[i], B[i]),
+the current minimum value on B is B[i]
+the current sum value on A is sum(priority queue)
+
+If the size of queue > k,
+we pop the minimum A[i].
+also update total sum -= A[i]
+
+If the size of queue == k,
+we update res = res = max(res, sum * B[i])
+*/
 
 class Solution {
 public:
@@ -31,6 +45,9 @@ public:
         return res;
     }
 };
+
+// Tc: O(N * log N) Sorting + O(N * log k) (n elements push/pop in heap of size k)
+// Sc: O(N) (ess) + O(k)
 
 /*
 You are given two 0-indexed integer arrays nums1 and nums2 of equal length n and a positive integer k. You must choose a subsequence of indices from nums1 of length k.
