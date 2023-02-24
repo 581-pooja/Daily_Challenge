@@ -1,0 +1,107 @@
+
+class Solution {
+  public:
+    // O(E*log V)
+    vector<int> dijkstra(int s, int n, vector<pair<int,int>> adj[]){
+        // pq <dist, node>
+        priority_queue <pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+        vector<int> dist(n+1, 1e9); // since 1-based indexing n+1
+        
+        dist[s] = 0; // src to stc dist is 0
+        pq.push({0, s});  // {dist, node}
+        
+        while(!pq.empty()){
+            int dis = pq.top().first;
+            int node = pq.top().second;
+            pq.pop();
+            
+            for(auto it: adj[node]){
+                int adjNode = it.first;
+                int edgeWt = it.second;
+                if(dis + edgeWt < dist[adjNode]){
+                    dist[adjNode] = dis + edgeWt;
+                    pq.push({dist[adjNode], adjNode});
+                }
+            }
+        }
+        return dist;
+    }
+    
+    // n: vertices, m: edges
+    int shortestPath(int n, int m, int a, int b, vector<vector<int>> &edges) {
+        vector<pair<int,int>> adj[n+1];
+        vector<vector<int>> curved;
+        
+        for(int i = 0; i<m; i++){
+            int u = edges[i][0];
+            int v = edges[i][1];
+            int wt = edges[i][2];
+            int cwt = edges[i][3];
+            
+            adj[u].push_back({v, wt});
+            adj[v].push_back({u, wt});
+            
+            curved.push_back({u,v,cwt});
+        }
+        // dijkstra finds shortest distance from source node to all other nodes
+        vector<int> dist_a = dijkstra(a,n,adj);
+        vector<int> dist_b = dijkstra(b,n,adj);
+        
+        int ans = dist_a[b];
+        for(int i = 0; i < m; i++){
+            int u = curved[i][0];
+            int v = curved[i][1];
+            int cwt = curved[i][2];
+            
+            ans = min(ans, dist_a[u] + cwt + dist_b[v]);
+            ans = min(ans, dist_a[v] + cwt + dist_b[u]);
+        }
+        
+        if(ans >= 1e9) return -1;
+        return ans;
+    }
+};
+/* Tc: O(E*log V) + O(E*log V) + O(E) 
+- dijkstra from src = a  to all the nodes
+- dijkstra from src  = b  to all the nodes
+- considering all the curved edges so O(E) to find the min 
+path a->u + curve + v->d (u->v is curve)
+path a->v + curve + u->d (u->v is curve)
+
+SC: O(V+E) (Adjacency matrix + PQ it can have max N or V edges)
+*/
+
+/*
+
+Intution - I want atmost 1 curved Edge . So that means , 0 or 1 curved Edge.
+For 0 Curved Edge, Direct Dijkstra (Shortest Path Algorithm) will work.
+For 1 Curved Edge , We need to consider 1 curved Edge in between any two nodes & rest all straight Edges.
+
+If I know Dist1 from a to u  &  Dist2 from v to b & we add curved distance between u,v. So, it will fulfill the condition of taking atmost one edge.
+
+Approach - 
+
+1) Get Shortest Path from a->b and Shortest Path from b->a using Dijkstra Algorithm. 
+2) Traverse Every Edge and add Curved Edge in between.
+3) Here, One thing to be noted that two distances will be considered.
+    a-> u + v->b + curved distance between u & v.
+    a->v + u->b + curved distance between u & v.
+
+Why two Distance ?  Since a can be closer to u and b can be closer to v  OR a can be closer to v and b can be closer to u
+
+Question:
+Given an undirected connected graph of n vertices and list of m edges in a graph and for each pair of vertices that are connected by an edge. 
+
+There are two edges between them, one curved edge and one straight edge i.e. the tuple (x, y, w1, w2) means that between vertices x and y, 
+there is a straight edge with weight w1 and a curved edge with weight w2.
+
+You are given two vertices a and b and you have to go from a to b through a series of edges such that in the entire path you can use at most 1 curved edge. 
+Your task is to find the shortest path from a to b satisfying the above condition. If there is no path from a to b, return -1.
+
+Example 1:
+Input:
+n = 4, m = 4
+a = 2, b = 4
+edges = {{1, 2, 1, 4}, {1, 3, 2, 4}, {1, 4, 3, 1}, {2, 4, 6, 5}}
+Output:2
+*/
