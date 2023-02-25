@@ -1,0 +1,57 @@
+
+/* Question:
+A special compression mechanism can arbitrarily delete 0 or more characters and replace them with the deleted character count.
+Given two strings, S and T where S is a normal string and T is a compressed string, determine if the compressed string  T is valid for the plaintext string S. 
+
+Example 1:
+Input:
+S = "GEEKSFORGEEKS"    T = "G7G3S"
+Output: 1
+Explanation:We can clearly see that T is a valid compressed string for S.
+
+Example 2:
+Input: S = "DFS"   T = "D1D"
+Output : 0
+Explanation:T is not a valid compressed string.
+*/
+
+class Solution {
+  public:
+    int checkCompressed(string S, string T) {
+        int i = 0, j = 0;
+        while(i < S.size() && j < T.size() ){
+            if(S[i] == T[j]){
+                i++, j++;
+                continue;
+            }
+            // if any turn T[j] == 0
+            if(T[j] - '0' == 0){
+                j++;
+                continue;
+            }
+            
+            int count = 0;
+            while(j < T.size() && isdigit(T[j])){
+                count = count * 10 + (T[j] - '0');
+                j++;
+            } 
+            
+            i += count;
+            if(count == 0) return 0; // since S[i] != T[j] Not match
+        }
+        return i == S.size() && j == T.size();
+    }
+};
+
+/*
+Initution:
+Intution - Just traverse through the string T 
+
+Two Case Arise - 
+
+    When S[i]==T[j] , so just continue
+    When T[j] = some digits , So, Shift i by those digits value.
+
+Time Complexity - O(n+m) where n=size of string S & m=size of string T.
+Space Complexity - O(1)
+*/
