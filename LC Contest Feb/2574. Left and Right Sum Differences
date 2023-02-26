@@ -67,5 +67,6 @@ public:
             ans.push_back(abs(rightSum - leftSum));
             leftSum += nums[i];
         }
+        return ans;
     }
 };
