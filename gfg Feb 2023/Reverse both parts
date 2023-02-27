@@ -1,0 +1,47 @@
+/*
+Given a linked list and a number k. You have to reverse first part of linked list with k nodes and the second part with n-k nodes.
+Example 1:
+Input: 1 -> 2 -> 3 -> 4 -> 5
+k = 2
+Output: 2 -> 1 -> 5 -> 4 -> 3
+Explanation: As k = 2 , so the first part 2
+nodes: 1 -> 2 and the second part with 3 nodes:
+3 -> 4 -> 5. Now after reversing the first part: 
+2 -> 1 and the second part: 5 -> 4 -> 3.
+So the output is: 2 -> 1 -> 5 -> 4 -> 3
+
+1 -> 2 -> 3 -> 4 -> 5
+*/
+
+  Node *reverse(Node *head, int k)
+  {
+      // code for reversing the list and counting the number of nodes into a variable
+      Node* cur = head;
+      Node* newHead = NULL;
+      int count = 0;
+      while(cur != NULL){
+          Node* next = cur->next;
+          cur->next = newHead;
+          newHead = cur;
+          cur = next;
+          count++;
+      }
+      // newHead is pointing to the start of reverseList and Head is pointing to end of reverseList
+
+      // Marking the head->next to newHead i.e. Last points to first forming cirle
+      head->next = newHead;
+
+      // couting the other part i.e. count-k-1 and moving temp till other part end
+      Node* temp = newHead;
+      int i = count - k - 1;
+      while(i--){
+          temp = temp->next;
+      }
+
+      // ans pointing to the start of k part & Marking the end of other part as NULL 
+      Node* ans = temp->next;
+      temp->next = NULL;
+      return ans;
+  }
+ // TC: O(N) (for reversing) + O(K-n-1) ~ O(N)
+   
