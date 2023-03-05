@@ -1,0 +1,55 @@
+// Using Recursion
+
+class Solution {
+public:
+    void printSeq(int ind, vector<int> &ds, vector<int> &nums, int n, set<vector<int>> &st){
+        // base case
+        //If we have our index greater than or equal to size of nums then we cant go further 
+        //so we will check if there is a subarray with size greater than equal to 2
+        if(ind == n){
+            if(ds.size() >= 2) st.insert(ds);
+            return;
+        }
+
+        //now for [0,n-1] index we will check either condition for inserting into a vector
+        //1. if a vector is empty so we can push the element easily
+        //2. if a last element is less than equal to cur element
+
+        if(!ds.size() || nums[ind] >= ds.back() ){
+            // pick the particular index into the subsequence
+            ds.push_back(nums[ind]);
+            printSeq(ind+1, ds, nums, n, st);
+            ds.pop_back();   
+        }
+        
+        // Not pick the element into the subsequence
+        printSeq(ind+1, ds, nums, n, st);
+    }
+
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> ds;
+        //repetion of subarray so set doesnt allow repetion of values
+        set<vector<int>> st;
+        printSeq(0, ds, nums, n, st);
+        return vector(st.begin(), st.end());
+    }
+};
+
+// Tc: O(2^n * n * n) | Tc: O(exponential * )|refer official solution |
+// (since insertion takes O(log n) = O(log 2^n) = O(n) Tc to insert in the set)
+
+// Sc: O(2^n * n) | O(2^n) sequences, each having a length of O(n) and RSC : O(N)
+
+/*
+Given an integer array nums, return all the different possible non-decreasing subsequences of the given array with at least two elements. 
+You may return the answer in any order.
+
+Example 1:
+Input: nums = [4,6,7,7]
+Output: [[4,6],[4,6,7],[4,6,7,7],[4,7],[4,7,7],[6,7],[6,7,7],[7,7]]
+
+Example 2:
+Input: nums = [4,4,3,2,1]
+Output: [[4,4]]
+*/
